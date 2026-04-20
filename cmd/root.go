@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"strings"
 	"syscall"
 
@@ -19,8 +20,46 @@ import (
 	"github.com/cloudbox-sh/statuspulse/internal/styles"
 )
 
-// Version is set via -ldflags at release time. Dev builds show "dev".
+// Version is set via -ldflags at release time by GoReleaser. When the
+// binary is built without ldflags (go build / go run / go install), the
+// init() below upgrades "dev" to a best-effort value derived from Go's
+// embedded build info — the module version for `go install @vX.Y.Z`, or
+// `dev+<commit>[-dirty]` for a direct checkout build.
 var Version = "dev"
+
+// resolveVersion returns a better-than-"dev" version string when the
+// binary was compiled without the GoReleaser ldflag injection.
+func resolveVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "dev"
+	}
+	// `go install github.com/cloudbox-sh/statuspulse@v0.0.3` embeds "v0.0.3".
+	// Local builds show "(devel)" here — fall through to VCS info.
+	if v := info.Main.Version; v != "" && v != "(devel)" {
+		return strings.TrimPrefix(v, "v")
+	}
+	var rev, modified string
+	for _, s := range info.Settings {
+		switch s.Key {
+		case "vcs.revision":
+			rev = s.Value
+		case "vcs.modified":
+			modified = s.Value
+		}
+	}
+	if rev == "" {
+		return "dev"
+	}
+	short := rev
+	if len(short) > 12 {
+		short = short[:12]
+	}
+	if modified == "true" {
+		short += "-dirty"
+	}
+	return "dev+" + short
+}
 
 // apiURLFlag is bound to the root --api-url persistent flag and read by
 // newClient() when a subcommand builds its client.
@@ -55,6 +94,10 @@ func Execute() error {
 }
 
 func init() {
+	if Version == "dev" {
+		Version = resolveVersion()
+	}
+
 	rootCmd.PersistentFlags().StringVar(&apiURLFlag, "api-url", "",
 		"StatusPulse API base URL (overrides config + STATUSPULSE_API_URL)")
 	rootCmd.PersistentFlags().BoolVar(&jsonOutput, "json", false,
