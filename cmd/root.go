@@ -31,6 +31,12 @@ var apiURLFlag string
 // human output + any interactive prompts).
 var jsonOutput bool
 
+// debugFlag is bound to --debug / -d. When true, the HTTP client logs a
+// one-line summary of every request and response to stderr. In --json mode
+// the lines are NDJSON objects so the output remains programmatically
+// consumable.
+var debugFlag bool
+
 var rootCmd = &cobra.Command{
 	Use:   "statuspulse",
 	Short: "StatusPulse — hosted status pages from the terminal",
@@ -53,6 +59,8 @@ func init() {
 		"StatusPulse API base URL (overrides config + STATUSPULSE_API_URL)")
 	rootCmd.PersistentFlags().BoolVar(&jsonOutput, "json", false,
 		"Emit machine-parsable JSON instead of styled tables (scripts + AI agents)")
+	rootCmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "d", false,
+		"Log HTTP request/response summary to stderr (NDJSON when --json is set)")
 	rootCmd.Version = Version
 	rootCmd.SetVersionTemplate(styles.Accent.Render("statuspulse") + " " + Version + "\n")
 }
@@ -132,7 +140,9 @@ func newClient() (*client.Client, *config.Resolved, error) {
 	if r.Token == "" {
 		return nil, r, config.ErrNotAuthenticated
 	}
-	return client.New(r.APIURL, r.Token), r, nil
+	return client.New(r.APIURL, r.Token).
+		WithBasicAuth(os.Getenv("STATUSPULSE_BASIC_USER"), os.Getenv("STATUSPULSE_BASIC_PASS")).
+		WithDebug(debugFlag, jsonOutput), r, nil
 }
 
 // newAnonClient returns a client without requiring a token. Used by `login`.
@@ -141,7 +151,9 @@ func newAnonClient() (*client.Client, *config.Resolved, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	return client.New(r.APIURL, r.Token), r, nil
+	return client.New(r.APIURL, r.Token).
+		WithBasicAuth(os.Getenv("STATUSPULSE_BASIC_USER"), os.Getenv("STATUSPULSE_BASIC_PASS")).
+		WithDebug(debugFlag, jsonOutput), r, nil
 }
 
 // handleAPIError turns a raw API error into a friendly, context-aware one.

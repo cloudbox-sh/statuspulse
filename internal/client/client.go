@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -57,6 +58,79 @@ func (t *basicAuthTransport) RoundTrip(r *http.Request) (*http.Response, error) 
 	r2 := r.Clone(r.Context())
 	r2.SetBasicAuth(t.user, t.pass)
 	return t.base.RoundTrip(r2)
+}
+
+// WithDebug wraps the client's transport in a logging RoundTripper that
+// emits a one-line summary of every request and response to stderr.
+// Authorization + X-API-Key headers and request/response bodies are not
+// logged. When asJSON is true, each line is an NDJSON object instead of
+// human text — chosen so that `--json` stays parse-clean on stdout while
+// stderr carries structured debug that a script or agent can also parse.
+// A false enabled leaves the client unchanged.
+func (c *Client) WithDebug(enabled, asJSON bool) *Client {
+	if !enabled {
+		return c
+	}
+	base := c.http.Transport
+	if base == nil {
+		base = http.DefaultTransport
+	}
+	c.http.Transport = &debugTransport{base: base, asJSON: asJSON}
+	return c
+}
+
+type debugTransport struct {
+	base   http.RoundTripper
+	asJSON bool
+}
+
+func (t *debugTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	start := time.Now()
+	if t.asJSON {
+		writeDebugJSON(map[string]any{
+			"debug":  "request",
+			"method": r.Method,
+			"url":    r.URL.String(),
+		})
+	} else {
+		fmt.Fprintf(os.Stderr, "[debug] → %s %s\n", r.Method, r.URL.String())
+	}
+
+	resp, err := t.base.RoundTrip(r)
+	durMs := time.Since(start).Round(time.Millisecond).Milliseconds()
+
+	if err != nil {
+		if t.asJSON {
+			writeDebugJSON(map[string]any{
+				"debug":       "response",
+				"error":       err.Error(),
+				"duration_ms": durMs,
+			})
+		} else {
+			fmt.Fprintf(os.Stderr, "[debug] ← ERR %v (%dms)\n", err, durMs)
+		}
+		return resp, err
+	}
+
+	if t.asJSON {
+		writeDebugJSON(map[string]any{
+			"debug":       "response",
+			"status":      resp.StatusCode,
+			"status_text": http.StatusText(resp.StatusCode),
+			"duration_ms": durMs,
+		})
+	} else {
+		fmt.Fprintf(os.Stderr, "[debug] ← %d %s (%dms)\n", resp.StatusCode, http.StatusText(resp.StatusCode), durMs)
+	}
+	return resp, nil
+}
+
+func writeDebugJSON(m map[string]any) {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return
+	}
+	fmt.Fprintln(os.Stderr, string(b))
 }
 
 // APIError is returned when the API responds with a non-2xx status. The
