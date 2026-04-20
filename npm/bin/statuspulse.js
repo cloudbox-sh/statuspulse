@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Meta-package shim: resolves the platform-specific @cloudbox/statuspulse-*
+// Meta-package shim: resolves the platform-specific @cloudboxsh/statuspulse-*
 // package at runtime and execs the binary it ships. Matches the
 // optionalDependencies pattern used by esbuild, biome, bun, swc, etc.
 
@@ -10,11 +10,11 @@ const path = require("node:path");
 const { platform, arch } = process;
 
 const PLATFORM_MAP = {
-  "linux-x64": { pkg: "@cloudbox/statuspulse-linux-x64", bin: "statuspulse" },
-  "linux-arm64": { pkg: "@cloudbox/statuspulse-linux-arm64", bin: "statuspulse" },
-  "darwin-x64": { pkg: "@cloudbox/statuspulse-darwin-x64", bin: "statuspulse" },
-  "darwin-arm64": { pkg: "@cloudbox/statuspulse-darwin-arm64", bin: "statuspulse" },
-  "win32-x64": { pkg: "@cloudbox/statuspulse-win32-x64", bin: "statuspulse.exe" },
+  "linux-x64": { pkg: "@cloudboxsh/statuspulse-linux-x64", bin: "statuspulse" },
+  "linux-arm64": { pkg: "@cloudboxsh/statuspulse-linux-arm64", bin: "statuspulse" },
+  "darwin-x64": { pkg: "@cloudboxsh/statuspulse-darwin-x64", bin: "statuspulse" },
+  "darwin-arm64": { pkg: "@cloudboxsh/statuspulse-darwin-arm64", bin: "statuspulse" },
+  "win32-x64": { pkg: "@cloudboxsh/statuspulse-win32-x64", bin: "statuspulse.exe" },
 };
 
 const key = `${platform}-${arch}`;
@@ -44,7 +44,7 @@ try {
 
 const binPath = path.join(pkgDir, "bin", target.bin);
 if (!existsSync(binPath)) {
-  console.error(`statuspulse: binary missing at ${binPath}. Reinstall @cloudbox/statuspulse.`);
+  console.error(`statuspulse: binary missing at ${binPath}. Reinstall @cloudboxsh/statuspulse.`);
   process.exit(1);
 }
 

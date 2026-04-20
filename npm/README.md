@@ -1,12 +1,12 @@
-# @cloudbox/statuspulse (npm distribution)
+# @cloudboxsh/statuspulse (npm distribution)
 
 Source layout for the npm distribution of the StatusPulse CLI.
 
 Users install:
 
 ```sh
-npx @cloudbox/statuspulse --help
-npm i -g @cloudbox/statuspulse
+npx @cloudboxsh/statuspulse --help
+npm i -g @cloudboxsh/statuspulse
 ```
 
 ## How it works (`optionalDependencies` pattern)
@@ -15,12 +15,12 @@ At release time we publish **N+1** packages, all at the same version:
 
 | Package | Contents |
 |---|---|
-| `@cloudbox/statuspulse` | Meta package. Node shim + `optionalDependencies` listing every platform package. |
-| `@cloudbox/statuspulse-linux-x64` | Linux x86_64 prebuilt binary. |
-| `@cloudbox/statuspulse-linux-arm64` | Linux ARM64 prebuilt binary. |
-| `@cloudbox/statuspulse-darwin-x64` | macOS Intel prebuilt binary. |
-| `@cloudbox/statuspulse-darwin-arm64` | macOS Apple Silicon prebuilt binary. |
-| `@cloudbox/statuspulse-win32-x64` | Windows x86_64 prebuilt binary. |
+| `@cloudboxsh/statuspulse` | Meta package. Node shim + `optionalDependencies` listing every platform package. |
+| `@cloudboxsh/statuspulse-linux-x64` | Linux x86_64 prebuilt binary. |
+| `@cloudboxsh/statuspulse-linux-arm64` | Linux ARM64 prebuilt binary. |
+| `@cloudboxsh/statuspulse-darwin-x64` | macOS Intel prebuilt binary. |
+| `@cloudboxsh/statuspulse-darwin-arm64` | macOS Apple Silicon prebuilt binary. |
+| `@cloudboxsh/statuspulse-win32-x64` | Windows x86_64 prebuilt binary. |
 
 Each platform package declares `"os"` and `"cpu"` so npm/pnpm/yarn only downloads the one matching the host. The meta package's `bin/statuspulse.js` shim resolves the correct platform package at runtime and execs the binary.
 

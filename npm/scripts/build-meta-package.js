@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the meta @cloudbox/statuspulse npm package.
+// Builds the meta @cloudboxsh/statuspulse npm package.
 //
 // Expects:
 //   VERSION env var — version number without leading "v"
@@ -27,11 +27,11 @@ const NPM_DIR = path.join(REPO_ROOT, "npm");
 const OUT_DIR = path.join(NPM_DIR, "dist", "meta");
 
 const PLATFORM_PACKAGES = [
-  "@cloudbox/statuspulse-linux-x64",
-  "@cloudbox/statuspulse-linux-arm64",
-  "@cloudbox/statuspulse-darwin-x64",
-  "@cloudbox/statuspulse-darwin-arm64",
-  "@cloudbox/statuspulse-win32-x64",
+  "@cloudboxsh/statuspulse-linux-x64",
+  "@cloudboxsh/statuspulse-linux-arm64",
+  "@cloudboxsh/statuspulse-darwin-x64",
+  "@cloudboxsh/statuspulse-darwin-arm64",
+  "@cloudboxsh/statuspulse-win32-x64",
 ];
 
 const optionalDependencies = Object.fromEntries(
@@ -42,7 +42,7 @@ fs.rmSync(OUT_DIR, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT_DIR, "bin"), { recursive: true });
 
 const pkgJson = {
-  name: "@cloudbox/statuspulse",
+  name: "@cloudboxsh/statuspulse",
   version: VERSION,
   description: "StatusPulse CLI — hosted status pages from the terminal (also an MCP server).",
   keywords: [
@@ -86,4 +86,4 @@ fs.copyFileSync(
 const rootReadme = path.join(REPO_ROOT, "README.md");
 fs.copyFileSync(rootReadme, path.join(OUT_DIR, "README.md"));
 
-console.log(`built @cloudbox/statuspulse @ ${VERSION} in ${OUT_DIR}`);
+console.log(`built @cloudboxsh/statuspulse @ ${VERSION} in ${OUT_DIR}`);

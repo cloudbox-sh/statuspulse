@@ -32,7 +32,7 @@ const OUT_DIR = path.join(REPO_ROOT, "npm", "dist", "platforms");
 //   statuspulse_<version>_<os>_<x86_64|arm64>.<tar.gz|zip>
 const TARGETS = [
   {
-    pkg: "@cloudbox/statuspulse-linux-x64",
+    pkg: "@cloudboxsh/statuspulse-linux-x64",
     dir: "linux-x64",
     archive: `statuspulse_${VERSION}_linux_x86_64.tar.gz`,
     binary: "statuspulse",
@@ -40,7 +40,7 @@ const TARGETS = [
     cpu: ["x64"],
   },
   {
-    pkg: "@cloudbox/statuspulse-linux-arm64",
+    pkg: "@cloudboxsh/statuspulse-linux-arm64",
     dir: "linux-arm64",
     archive: `statuspulse_${VERSION}_linux_arm64.tar.gz`,
     binary: "statuspulse",
@@ -48,7 +48,7 @@ const TARGETS = [
     cpu: ["arm64"],
   },
   {
-    pkg: "@cloudbox/statuspulse-darwin-x64",
+    pkg: "@cloudboxsh/statuspulse-darwin-x64",
     dir: "darwin-x64",
     archive: `statuspulse_${VERSION}_darwin_x86_64.tar.gz`,
     binary: "statuspulse",
@@ -56,7 +56,7 @@ const TARGETS = [
     cpu: ["x64"],
   },
   {
-    pkg: "@cloudbox/statuspulse-darwin-arm64",
+    pkg: "@cloudboxsh/statuspulse-darwin-arm64",
     dir: "darwin-arm64",
     archive: `statuspulse_${VERSION}_darwin_arm64.tar.gz`,
     binary: "statuspulse",
@@ -64,7 +64,7 @@ const TARGETS = [
     cpu: ["arm64"],
   },
   {
-    pkg: "@cloudbox/statuspulse-win32-x64",
+    pkg: "@cloudboxsh/statuspulse-win32-x64",
     dir: "win32-x64",
     archive: `statuspulse_${VERSION}_windows_x86_64.zip`,
     binary: "statuspulse.exe",
@@ -105,7 +105,7 @@ for (const t of TARGETS) {
   const pkgJson = {
     name: t.pkg,
     version: VERSION,
-    description: `Prebuilt ${t.dir} binary for @cloudbox/statuspulse.`,
+    description: `Prebuilt ${t.dir} binary for @cloudboxsh/statuspulse.`,
     repository: {
       type: "git",
       url: "git+https://github.com/cloudbox-sh/statuspulse.git",
@@ -127,7 +127,7 @@ for (const t of TARGETS) {
     `# ${t.pkg}\n\n` +
       `Prebuilt \`statuspulse\` binary for ${t.dir}.\n\n` +
       `You probably want the meta package instead:\n\n` +
-      `    npm i -g @cloudbox/statuspulse\n`
+      `    npm i -g @cloudboxsh/statuspulse\n`
   );
 
   console.log(`built ${t.pkg} @ ${VERSION}`);
