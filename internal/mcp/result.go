@@ -7,7 +7,7 @@ import (
 
 	"github.com/mark3labs/mcp-go/mcp"
 
-	"github.com/wgillmer/statuspulse-cli/internal/client"
+	"github.com/cloudbox-sh/statuspulse/internal/client"
 )
 
 // jsonResult marshals v to pretty JSON and returns it as the tool's text

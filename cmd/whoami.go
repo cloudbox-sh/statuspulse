@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/wgillmer/statuspulse-cli/internal/styles"
+	"github.com/cloudbox-sh/statuspulse/internal/styles"
 )
 
 var whoamiCmd = &cobra.Command{

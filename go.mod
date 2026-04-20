@@ -1,4 +1,4 @@
-module github.com/wgillmer/statuspulse-cli
+module github.com/cloudbox-sh/statuspulse
 
 go 1.23.0
 

@@ -1,1 +1,35 @@
+# AI tooling
 CLAUDE.md
+.claude/
+.cursor/
+.cursorrules
+.aider*
+.windsurfrules
+.github/copilot-*
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*_rsa
+*_rsa.pub
+credentials.json
+
+# Build / release artefacts
+/dist/
+/statuspulse
+/statuspulse.exe
+
+# npm wrapper build output
+/npm/platforms/*/bin/
+/npm/platforms/*/statuspulse
+/npm/platforms/*/statuspulse.exe
+
+# Editor
+.idea/
+.vscode/
+*.swp
+.DS_Store

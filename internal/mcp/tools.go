@@ -3,7 +3,7 @@ package mcp
 import (
 	mcpserver "github.com/mark3labs/mcp-go/server"
 
-	"github.com/wgillmer/statuspulse-cli/internal/client"
+	"github.com/cloudbox-sh/statuspulse/internal/client"
 )
 
 // deps is the tiny struct every tool handler closes over. Bundling the

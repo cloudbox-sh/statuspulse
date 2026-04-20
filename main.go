@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/wgillmer/statuspulse-cli/cmd"
+	"github.com/cloudbox-sh/statuspulse/cmd"
 )
 
 func main() {

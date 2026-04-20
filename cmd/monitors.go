@@ -17,8 +17,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 
-	"github.com/wgillmer/statuspulse-cli/internal/client"
-	"github.com/wgillmer/statuspulse-cli/internal/styles"
+	"github.com/cloudbox-sh/statuspulse/internal/client"
+	"github.com/cloudbox-sh/statuspulse/internal/styles"
 )
 
 var monitorsCmd = &cobra.Command{

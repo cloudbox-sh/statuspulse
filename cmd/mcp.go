@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/wgillmer/statuspulse-cli/internal/mcp"
+	"github.com/cloudbox-sh/statuspulse/internal/mcp"
 )
 
 // `statuspulse mcp serve` boots the local MCP server on stdio so AI agents

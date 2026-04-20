@@ -7,7 +7,7 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	mcpserver "github.com/mark3labs/mcp-go/server"
 
-	"github.com/wgillmer/statuspulse-cli/internal/client"
+	"github.com/cloudbox-sh/statuspulse/internal/client"
 )
 
 // registerMaintenanceTools wires schedule_maintenance + cancel_maintenance.
