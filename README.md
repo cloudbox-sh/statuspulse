@@ -45,7 +45,7 @@ irm https://get.cloudbox.sh/statuspulse.ps1 | iex
 go install github.com/cloudbox-sh/statuspulse@latest
 ```
 
-Verify: `statuspulse --version`.
+Verify: `statuspulse version`.
 
 ## Quickstart
 
@@ -199,7 +199,7 @@ Requires Go 1.23+.
 git clone https://github.com/cloudbox-sh/statuspulse
 cd statuspulse
 go build ./...
-./statuspulse --version
+./statuspulse version
 ```
 
 Releases are cut via GitHub Actions on `v*` tags — see [`.goreleaser.yaml`](.goreleaser.yaml) and [`.github/workflows/release.yml`](.github/workflows/release.yml).

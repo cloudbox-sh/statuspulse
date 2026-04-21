@@ -75,7 +75,7 @@ func runPagesList(cmd *cobra.Command, args []string) error {
 	header := lipgloss.JoinHorizontal(lipgloss.Top,
 		styles.Header.Width(38).Render("ID"),
 		styles.Header.Width(24).Render("NAME"),
-		styles.Header.Width(20).Render("SLUG"),
+		styles.Header.Width(28).Render("ORG/SLUG"),
 		styles.Header.Width(10).Render("MONITORS"),
 		styles.Header.Width(10).Render("ENABLED"),
 	)
@@ -86,10 +86,13 @@ func runPagesList(cmd *cobra.Command, args []string) error {
 		if p.Enabled {
 			enabled = styles.Success.Render("yes")
 		}
+		// Full "<org>/<page>" address — this is what users need for
+		// `statuspulse public status …` and for the public URL.
+		address := p.OrgSlug + "/" + p.Slug
 		row := lipgloss.JoinHorizontal(lipgloss.Top,
 			styles.Cell.Width(38).Render(p.ID),
 			styles.Cell.Width(24).Render(truncate(p.Name, 22)),
-			styles.Cell.Width(20).Render(truncate(p.Slug, 18)),
+			styles.Cell.Width(28).Render(truncate(address, 26)),
 			styles.Cell.Width(10).Render(fmt.Sprintf("%d", len(p.MonitorIDs))),
 			styles.Cell.Width(10).Render(enabled),
 		)

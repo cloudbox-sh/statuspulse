@@ -101,7 +101,7 @@ brews:
       name: Werner Gillmer
       email: werner@gillmer-industries.com
     test: |
-      system "#{bin}/statuspulse --version"
+      system "#{bin}/statuspulse version"
 
 scoops:
   - name: statuspulse

@@ -93,7 +93,7 @@ try {
   }
 
   Info "installed statuspulse $version to $installDir\$Bin"
-  & (Join-Path $installDir $Bin) --version
+  & (Join-Path $installDir $Bin) version
 }
 finally {
   Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue

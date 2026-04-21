@@ -76,6 +76,12 @@ var jsonOutput bool
 // consumable.
 var debugFlag bool
 
+// verboseFlag is bound to --verbose / -v. When true, subcommands show
+// extra detail (e.g. `status` lists each monitor + active incident rather
+// than just printing counts). Commands that have nothing richer to show
+// treat the flag as a no-op.
+var verboseFlag bool
+
 var rootCmd = &cobra.Command{
 	Use:   "statuspulse",
 	Short: "StatusPulse — hosted status pages from the terminal",
@@ -104,8 +110,11 @@ func init() {
 		"Emit machine-parsable JSON instead of styled tables (scripts + AI agents)")
 	rootCmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "d", false,
 		"Log HTTP request/response summary to stderr (NDJSON when --json is set)")
-	rootCmd.Version = Version
-	rootCmd.SetVersionTemplate(styles.Accent.Render("statuspulse") + " " + Version + "\n")
+	rootCmd.PersistentFlags().BoolVarP(&verboseFlag, "verbose", "v", false,
+		"Show extended detail for commands that support it")
+	// No rootCmd.Version assignment — version is exposed as a subcommand
+	// (`statuspulse version`) instead of a flag so that -v is unambiguously
+	// --verbose. See cmd/version.go.
 }
 
 // emit is the output helper used by every subcommand. In --json mode it

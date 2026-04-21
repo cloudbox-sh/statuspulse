@@ -136,4 +136,4 @@ case ":$PATH:" in
     ;;
 esac
 
-"$INSTALL_DIR/$BIN" --version || true
+"$INSTALL_DIR/$BIN" version || true

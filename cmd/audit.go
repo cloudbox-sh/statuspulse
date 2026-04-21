@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
@@ -164,23 +165,36 @@ func initAuditExportFlags() {
 
 var auditExportCmd = &cobra.Command{
 	Use:   "export",
-	Short: "Export audit entries (CSV or JSON) — same filters as list",
-	RunE:  runAuditExport,
+	Short: "Export audit entries — use --format csv (default) or --format json",
+	Long: "Export audit entries in CSV or JSON format. Same filter flags as `audit list`.\n\n" +
+		"Examples:\n" +
+		"  statuspulse audit export --format csv               # CSV to stdout (default)\n" +
+		"  statuspulse audit export --format json              # JSON to stdout\n" +
+		"  statuspulse audit export --format csv -o audit.csv  # write to file\n" +
+		"  statuspulse audit export --format json --from 2026-01-01T00:00:00Z",
+	RunE: runAuditExport,
 }
 
 func runAuditExport(cmd *cobra.Command, args []string) error {
+	format := strings.ToLower(auditExportFormat)
+	if format != "csv" && format != "json" {
+		return fmt.Errorf("--format must be csv or json, got %q", auditExportFormat)
+	}
+
+	// Discoverability hint: if the user didn't set --format explicitly, print
+	// a one-liner on stderr so they know the flag exists and that there's a
+	// JSON alternative. Stays out of stdout so piping into files or jq works.
+	if !cmd.Flags().Changed("format") {
+		fmt.Fprintln(os.Stderr, styles.Dim.Render(
+			"(exporting as csv — pass --format json for JSON)"))
+	}
+
 	c, _, err := newClient()
 	if err != nil {
 		return err
 	}
 	ctx, cancel := signalCtx()
 	defer cancel()
-
-	switch auditExportFormat {
-	case "csv", "json":
-	default:
-		return fmt.Errorf("--format must be csv or json")
-	}
 
 	q, err := buildAuditQuery()
 	if err != nil {
@@ -196,7 +210,7 @@ func runAuditExport(cmd *cobra.Command, args []string) error {
 		defer f.Close()
 		out = f
 	}
-	if err := c.ExportAudit(ctx, auditExportFormat, q, out); err != nil {
+	if err := c.ExportAudit(ctx, format, q, out); err != nil {
 		return handleAPIError(err)
 	}
 	if auditExportOut != "" {
